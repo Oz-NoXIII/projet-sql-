@@ -9,7 +9,7 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
                
       Choix d'implémentation: 
 
-                        a)Les relations seront définies comme des dictionnaires de liste de taille constante.
+                        a)Les relations seront définies par un objet Relation qui a deux attributs: un nom et un dictionnaire de listes de taille constante.
                         b)La selection sera une fonction à 4 paramètres: 1.La relation qui est un dictionnaire;
                                                                          2.L'attribut qui doit être une clé du dictionnaire;
                                                                          3.Le symbole qui devra faire partie de la liste prédéfini de symboles;
