@@ -10,7 +10,7 @@ def project(relation, *args):
     # print(args)
     args = fct_utile.removeduplicate(args)
     # print(args)
-    fct_utile.argsinrel(relation.dict, args)
+    fct_utile.argsinrel(relation.dico, args)
     sol = "select "
     for i in range(len(args)):
         if i != len(args) - 1:
