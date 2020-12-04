@@ -104,6 +104,14 @@ class FctUTest(unittest.TestCase):
         args = ["a"]
         self.assertTrue(argsinrel(rel, args))
 
+    def test_isarginrel(self):
+        pass  # TODO
+
+    def test_joinable(self):
+        pass  # TODO
+
+    def test_havesameargs(self):
+        pass  # TODO
 
 if __name__ == '__main__':
     unittest.main()

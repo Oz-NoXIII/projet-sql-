@@ -121,3 +121,42 @@ def havesametype(args):
         else:
             print(f"Format Incompatible: {type(argument)} différent de {a}")
         return False
+
+
+def isarginrel(arg, rel):
+    """Fonction qui retourne True si un argument arg est attribut de la relation rel.
+
+    Retourne False sinon."""
+
+    if type(rel) != Relation:
+        raise ErrorType()
+    if arg in rel.dico:
+        return True
+    else:
+        return False
+
+
+def joinable(rel1, rel2):
+    """Fonction qui retourne True si deux relations possèdent au moins un attribut en commun.
+
+    Retourne False sinon."""
+
+    if type(rel1) != Relation or type(rel2) != Relation:
+        raise ErrorType("Prends uniquement des relations en tant que paramètre!")
+    for arg in rel1.dico:
+        if isarginrel(arg, rel2):
+            return True
+    return False
+
+
+def havesameargs(rel1, rel2):
+    """Fonction qui retourne True si deux relations possèdent exactement les mêmes attributs.
+
+    Retourne False sinon."""
+
+    if type(rel1) != Relation or type(rel2) != Relation:
+        raise ErrorType("Prends uniquement des relations en tant que paramètre!")
+    for arg in rel1.dico:
+        if not isarginrel(arg, rel2):
+            return False
+    return True

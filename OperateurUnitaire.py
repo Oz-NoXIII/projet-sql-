@@ -7,9 +7,8 @@ def select():
 
 def project(relation, *args):
     """Fonction qui retourne le str qui est la traduction de la projection en SPJRUD en SQL """
-    # print(args)
+
     args = fct_utile.removeduplicate(args)
-    # print(args)
     fct_utile.argsinrel(relation.dico, args)
     sol = "select "
     for i in range(len(args)):
