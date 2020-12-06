@@ -95,10 +95,10 @@ class FctUTest(unittest.TestCase):
 
     def test_argsinrel(self):
         """Teste le fonctionnement de la fonction argsinrel"""
-
+        ErrorType
         rel = {}
         args = "a"
-        with self.assertRaises(ErrorType):
+        with self.assertRaises():
             argsinrel(rel, args)
         rel = Relation("rel", {"a": [1], "b": [2]})
         args = ["a"]

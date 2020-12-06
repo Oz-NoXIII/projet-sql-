@@ -1,8 +1,19 @@
 import fct_utile
+from fct_utile import ErrorType,isarelation,ComparatorError
 
+def select(relation,cmp,attrib,const):
+    comparators=['=','<','>','<=','>=','!=']
 
-def select():
-    pass
+    isarelation(relation.dico)
+
+    if comparators.count(cmp)==0:
+        print("Veuillez utiliser un des comparateurs suivants: =,<,>,<=,>=,!=")
+        raise ComparatorError("l'element "+cmp+" est invalide pour cette operation")
+    elif type(attrib) != type(const):
+        raise ErrorType(f"Les attributs: {attrib} et {const} doivent etre du meme type")
+    else:
+        query = f"SELECT * FROM {relation.nom} WHERE {attrib}{cmp}{const}";
+        print(query);
 
 
 def project(relation, *args):
@@ -21,3 +32,5 @@ def project(relation, *args):
 
 def rename():
     pass
+
+

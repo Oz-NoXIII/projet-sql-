@@ -15,6 +15,19 @@ class ErrorType(Exception):
     pass
 
 
+class ComparatorError(Exception):
+    """Exception qui signale une erreur au niveau des comparateurs"""
+    pass
+
+class AttributesError(Exception):
+    """Exception qui signale une erreur au niveau des attributs de relation"""
+    pass
+
+class NumberRelationError(Exception):
+    """Exception qui signale une erreur au niveau du nombre de relation dans une operation binaire"""
+    pass
+
+
 def argsinrel(relation, args):
     """Fonction qui vérifie si tous les arguments dans args font partie de la relation rel et retourne True.
 
@@ -52,8 +65,10 @@ def isarelation(dico):
         raise ErrorType()
     len_is_cst(dico)
     for key in dico:
-        havesametype(dico[key])
+        if havesametype(dico[key]):
+            return True
 
+    return False
 
 def len_is_cst(dico):
     """Fonction qui vérifie si toutes les clés pointent vers des listes non-vides de même taille et retourne True.

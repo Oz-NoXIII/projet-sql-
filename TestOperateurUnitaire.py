@@ -7,8 +7,10 @@ class OpUTest(unittest.TestCase):
     """Test case utilisé pour tester les fonctions du module OperateurUnitaire"""
 
     def test_select(self):
-        """Teste le fonctionnement de la fonction select"""
-        pass
+        rel=fct_utile.Relation('Relation',{'id':[1,2,3],'nom':['alice','bob','gildas']})
+        attr="attrib"
+        const="g"
+        select(rel,"l",attr,const)
 
     def test_project(self):
         """Teste le fonctionnement de la fonction project"""
