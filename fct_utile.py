@@ -1,12 +1,12 @@
 class Relation:
     def __init__(self, nom, dico):
-        self.nom = nom
+        self.name = nom
         isarelation(dico)
-        self.dico = dico
+        self.attributes = dico
 
 
-class ErrorKey(Exception):
-    """Exception qui signale une erreur au niveau des clés des dictionnaires"""
+class AttributesError(Exception):
+    """Exception qui signale une erreur au niveau des attributs des relations"""
     pass
 
 
@@ -19,14 +19,6 @@ class ComparatorError(Exception):
     """Exception qui signale une erreur au niveau des comparateurs"""
     pass
 
-class AttributesError(Exception):
-    """Exception qui signale une erreur au niveau des attributs de relation"""
-    pass
-
-class NumberRelationError(Exception):
-    """Exception qui signale une erreur au niveau du nombre de relation dans une operation binaire"""
-    pass
-
 
 def argsinrel(relation, args):
     """Fonction qui vérifie si tous les arguments dans args font partie de la relation rel et retourne True.
@@ -37,18 +29,18 @@ def argsinrel(relation, args):
         raise ErrorType()
     try:
         for arg in args:
-            if arg not in relation.dico:
-                raise ErrorKey()
+            if arg not in relation.attributes:
+                raise AttributesError()
         return True
-    except ErrorKey:
-        print(f"L'argument {arg} n'appartient pas à la relation {relation}.")
+    except AttributesError:
+        print(f"L'argument {arg} n'appartient pas à la relation {relation.name}.")
         return False
 
 
 def removeduplicate(args):
-    """Fonction qui supprime les doublons dans la liste"""
+    """Fonction qui supprime les doublons dans un tuple et retourne une liste"""
 
-    if type(args) != list:
+    if type(args) != tuple:
         raise ErrorType()
     new_args = []
     for i in range(len(args)):
@@ -57,60 +49,59 @@ def removeduplicate(args):
     return new_args
 
 
-def isarelation(dico):
-    """Fonction qui vérifie si toutes les clés pointent vers des listes non-vides de même taille contenant des éléments
-    de même type"""
+def isarelation(attributes):
+    """Fonction qui vérifie si toutes les attributs pointent vers des listes non-vides de même taille contenant des éléments
+    de même type et retourne True"""
 
-    if type(dico) != dict:
+    if type(attributes) != dict:
         raise ErrorType()
-    len_is_cst(dico)
-    for key in dico:
-        if havesametype(dico[key]):
-            return True
+    len_is_cst(attributes)
+    for attribute in attributes:
+        havesametype(attributes[attribute])
+    return True
 
-    return False
 
-def len_is_cst(dico):
-    """Fonction qui vérifie si toutes les clés pointent vers des listes non-vides de même taille et retourne True.
+def len_is_cst(attributes):
+    """Fonction qui vérifie si toutes les attributs pointent vers des listes non-vides de même taille et retourne True.
 
     Lève une erreur et retourne False sinon."""
 
-    if type(dico) != dict:
+    if type(attributes) != dict:
         raise ErrorType()
     try:
-        arelists(dico)
+        arelists(attributes)
         premierPassage = True
-        for argument in dico:
+        for attribute in attributes:
             if premierPassage:
-                a = len(dico[argument])
+                a = len(attributes[attribute])
                 premierPassage = False
                 if a == 0:
-                    raise ErrorKey()
-            elif len(dico[argument]) != a:
-                raise ErrorKey()
+                    raise AttributesError()
+            elif len(attributes[attribute]) != a:
+                raise AttributesError()
         return True
-    except ErrorKey:
+    except AttributesError:
         if a == 0:
-            print(f"La clé {argument} pointe vers une liste vide.")
+            print(f"L'attribut {attribute} pointe vers une liste vide.")
         else:
             print("Les tailles des listes ne sont pas constantes.")
         return False
 
 
-def arelists(dico):
+def arelists(attributes):
     """Fonction qui vérifie si toutes les clés pointent vers des listes et retourne True.
 
     Lève une erreur et retourne False sinon."""
 
-    if type(dico) != dict:
+    if type(attributes) != dict:
         raise ErrorType()
     try:
-        for argument in dico:
-            if type(dico[argument]) != list:
-                raise ErrorKey()
+        for attribute in attributes:
+            if type(attributes[attribute]) != list:
+                raise AttributesError()
         return True
-    except ErrorKey:
-        print(f"La clé {argument} ne pointe pas vers une liste.")
+    except AttributesError:
+        print(f"L'attribut {attribute} ne pointe pas vers une liste.")
         return False
 
 
@@ -123,18 +114,18 @@ def havesametype(args):
         raise ErrorType()
     try:
         premierPassage = True
-        for argument in args:
+        for arg in args:
             if premierPassage:
-                a = type(argument)
+                a = type(arg)
                 premierPassage = False
-            elif type(argument) != a:
+            elif type(arg) != a:
                 raise ErrorType()
         return True
     except ErrorType:
         if len(args) > 2:
-            print(f"Il y a au moins deux types différents dans la liste dont {type(argument)} et {a}.")
+            print(f"Il y a au moins deux types différents dans la liste dont {type(arg)} et {a}.")
         else:
-            print(f"Format Incompatible: {type(argument)} différent de {a}")
+            print(f"Format Incompatible: {type(arg)} différent de {a}")
         return False
 
 
@@ -145,7 +136,7 @@ def isarginrel(arg, rel):
 
     if type(rel) != Relation:
         raise ErrorType()
-    if arg in rel.dico:
+    if arg in rel.attributes:
         return True
     else:
         return False
@@ -158,20 +149,29 @@ def joinable(rel1, rel2):
 
     if type(rel1) != Relation or type(rel2) != Relation:
         raise ErrorType("Prends uniquement des relations en tant que paramètre!")
-    for arg in rel1.dico:
+    for arg in rel1.attributes:
         if isarginrel(arg, rel2):
             return True
     return False
 
 
-def havesameargs(rel1, rel2):
-    """Fonction qui retourne True si deux relations possèdent exactement les mêmes attributs.
+def havesameattributes(rel1, rel2):
+    """Fonction qui retourne True si deux relations possèdent exactement les mêmes attributs ayant des valeurs de même
+    type.
 
     Retourne False sinon."""
 
     if type(rel1) != Relation or type(rel2) != Relation:
         raise ErrorType("Prends uniquement des relations en tant que paramètre!")
-    for arg in rel1.dico:
+    if len(rel1.attributes) != len(rel2.attributes):
+        return False
+    for arg in rel1.attributes:
         if not isarginrel(arg, rel2):
             return False
+        else:
+            a = rel1.attributes[arg]
+            b = rel2.attributes[arg]
+            args = [a[0], b[0]]
+            if not havesametype(args):
+                return False
     return True
