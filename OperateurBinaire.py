@@ -41,7 +41,7 @@ def union(rel1, rel2):
     if havesameattributes(rel1, rel2):
         name = f"SELECT * FROM {rel1.nom} UNION SELECT * FROM {rel2.nom}"
     else:
-        raise AttributesError(f"Différence impossible car attributs de {rel1.name} différent de {rel2.name} ")
+        raise AttributesError(f"Union impossible car attributs de {rel1.name} différent de {rel2.name} ")
     new_rel = Relation(name, rel1.attributes)
     return new_rel
 
