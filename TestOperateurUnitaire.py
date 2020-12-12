@@ -10,7 +10,7 @@ class OpUTest(unittest.TestCase):
         rel=fct_utile.Relation('Relation',{'id':[1,2,3],'nom':['alice','bob','gildas']})
         attr="attrib"
         const="g"
-        select(rel,"l",attr,const)
+        select(rel,"<",attr,const)
 
     def test_project(self):
         """Teste le fonctionnement de la fonction project"""

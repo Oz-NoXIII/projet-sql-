@@ -45,14 +45,14 @@ def same_name(*relations):
     result = False
     if are_a_relation(*relations) and more_than_one_relation(*relations) and same_number_attributes(*relations):
         for rel in relations:
-            if relations[0].name == rel.name:
+            if relations[0].nom == rel.nom:
                 result = True
             else:
                 raise ErrorType(f"Les relations {relations} n'ont pas les même noms d'attributs")
                 result = False
 
 """
-Fonction qui retourne True les paramètres passés sont des Relations et sinon retourne False
+Fonction qui retourne True si les paramètres passés sont des Relations et sinon retourne False
 """
 # def are_a_relation(*relations):
 #     result = False
@@ -86,7 +86,7 @@ def same_number_attributes(*relations):
         result=True
         for rel in (relations):
             if len(rel.dicos)!=length:
-                raise AttributesError(f"Les relations {relations} n'ont pas le meme même d'attributs")
+                raise AttributesError(f"Les relations {relations} n'ont pas le même nombre d'attributs")
                 result=False
                 break
     return result

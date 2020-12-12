@@ -10,7 +10,7 @@ def select(relation,cmp,attrib,const):
         print("Veuillez utiliser un des comparateurs suivants: =,<,>,<=,>=,!=")
         raise ComparatorError("l'element "+cmp+" est invalide pour cette operation")
     elif type(attrib) != type(const):
-        raise ErrorType(f"Les attributs: {attrib} et {const} doivent etre du meme type")
+        raise ErrorType(f"Les attributs: {attrib} et {const} doivent etre du même type")
     else:
         query = f"SELECT * FROM {relation.nom} WHERE {attrib}{cmp}{const}";
         print(query);
