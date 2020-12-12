@@ -1,112 +1,59 @@
-import fct_utile
-from fct_utile import ErrorType,NumberRelationError,AttributesError,isarelation
+from fct_utile import joinable, AttributesError, isarginrel, Relation, havesameattributes
 
 
 def join(rel1, rel2):
-    """Fonction qui retourne le str qui est la traduction de la jonction en SPJRUD en SQL"""
+    """Fonction qui retourne une relation dont le name est la traduction de la jonction en SPJRUD en SQL
+    et le attributes est un dictionnaire qui décrit superficiellement la relation obtenue par la jonction
+    (mêmes attributs et types de valeurs)"""
 
-    if fct_utile.joinable(rel1, rel2):
-        sol = f"select * from {rel1.nom} natural join {rel2.nom}"
+    if joinable(rel1, rel2):
+        name = f"select * from {rel1.name} natural join {rel2.name}"
     else:
-        raise fct_utile.ErrorKey("Jonction impossible car aucun attribut en commun")
-    return sol
+        raise AttributesError("Jonction impossible car aucun attribut en commun")
 
-
-def union(*relations):
-    # if(more_than_one_realtion(*rel)):
-    #     pass
-    #
-    # query = ""
-    # item_query=[]
-    # for index, rel in enumerate(relations):
-    #     item_query[index]=f"SELECT * FROM {rel.nom}"
-    #
-    # for item in item_query:
-    #     query = f"UNION {item}"
-    pass  # TODO
-
-"""
-Fonction qui retourne True si les relations passées en paramètres ont les(même nom,et attributs de même type) et sinon retourne False 
-"""
-def same_oder_attributes(*relations):
-    pass
-
-"""
-Fonction qui retourne True si les relations passées en paramètres sont identiques(même nom,et attributs de même type et d'ordre) et sinon retourne False
-"""
-# def same_attributes(*relations:Relation):
-#     if are_a_relation(*relations) and more_than_one_relation(*relations) and same_number_attributes(*relations):
-#         for attribut in relations.dicos:
-#             for key, val in attribut:
-#                 if key in type(relations[0].dico)
-
-
-def same_name(*relations):
-    result = False
-    if are_a_relation(*relations) and more_than_one_relation(*relations) and same_number_attributes(*relations):
-        for rel in relations:
-            if relations[0].nom == rel.nom:
-                result = True
-            else:
-                raise ErrorType(f"Les relations {relations} n'ont pas les même noms d'attributs")
-                result = False
-
-"""
-Fonction qui retourne True si les paramètres passés sont des Relations et sinon retourne False
-"""
-# def are_a_relation(*relations):
-#     result = False
-#     for rel in relations:
-#         if rel.name and type(rel.name)==str and rel.dicos and type(rel.dicos)==dict:
-#             result = True
-#         else:
-#             raise ErrorType(f"Le paramètre {rel} n'est pas une relation valide")
-#             result = False
-#             break
-#     return result
-
-def are_a_relation(*relations):
-    result = False
-    for rel in relations:
-        if isarelation(rel):
-            result = True
+    attributes = {}
+    for arg in rel1.attributes:
+        if type(rel1.attributes[arg][0]) == int:
+            attributes[arg] = [1]
+        elif type(rel1.attributes[arg][0]) == str:
+            attributes[arg] = ["a"]
         else:
-            result = False
-            break
+            attributes[arg] = []
 
-    return result
+    for arg in rel2.attributes:
+        if not isarginrel(arg, rel1):
+            if type(rel2.attributes[arg][0]) == int:
+                attributes[arg] = [1]
+            elif type(rel2.attributes[arg][0]) == str:
+                attributes[arg] = ["a"]
+            else:
+                attributes[arg] = []
 
-"""
-Fonction qui retourne True si les relations passées en paramètres ont le même nombre d'attributs et sinon retourne False 
-"""
-def same_number_attributes(*relations):
-    result = False
-    if are_a_relation(*relations) and more_than_one_relation(*relations) :
-        length=len(relations[0].dicos)
-        result=True
-        for rel in (relations):
-            if len(rel.dicos)!=length:
-                raise AttributesError(f"Les relations {relations} n'ont pas le même nombre d'attributs")
-                result=False
-                break
-    return result
+    new_rel = Relation(name, attributes)
+    return new_rel
 
-"""
-Fonction qui retourne True s'il ya au moins deux relations passées en paramètres et sinon retourne False 
-"""
-def more_than_one_relation(*relations):
-    if len(relations)<2:
-        raise NumberRelationError("Au moins deux relations nécessaires pour cette opération")
-        return False
+
+def union(rel1, rel2):
+    """Fonction qui retourne une relation dont le name est la traduction de l'union en SPJRUD en SQL
+    et le attributes est le attributes d'une des relations en paramètre
+    """
+
+    if havesameattributes(rel1, rel2):
+        name = f"SELECT * FROM {rel1.nom} UNION SELECT * FROM {rel2.nom}"
     else:
-        return True
+        raise AttributesError(f"Différence impossible car attributs de {rel1.name} différent de {rel2.name} ")
+    new_rel = Relation(name, rel1.attributes)
+    return new_rel
 
 
 def difference(rel1, rel2):
-    """Fonction qui retourne le str qui est la traduction de la différence en SPJRUD en SQL"""
+    """Fonction qui retourne une relation dont le name est la traduction de la différence en SPJRUD en SQL
+    et le attributes est le attributes d'une des relations en paramètre
+    """
 
-    if fct_utile.havesameargs(rel1, rel2):
-        sol = f"select * from {rel1.nom} except select * from {rel2.nom}"
+    if havesameattributes(rel1, rel2):
+        name = f"select * from {rel1.name} except select * from {rel2.name}"
     else:
-        raise fct_utile.ErrorKey(f"Différence impossible car attributs de {rel1.nom} différent de {rel2.nom} ")
-    return sol
+        raise AttributesError(f"Différence impossible car attributs de {rel1.name} différent de {rel2.name} ")
+    new_rel = Relation(name, rel1.attributes)
+    return new_rel
