@@ -66,5 +66,7 @@ def rename(relation, old_name, new_name):
         raise AttributesError(f"{old_name} n'est pas un attribut de la relation {relation}")
 
     query = f"ALTER TABLE {relation.name} RENAME COLUMN {old_name} TO {new_name}"
+    relation.attributes[new_name] = relation.attributes[old_name]
+    del relation.attributes[old_name]
     new_relation = Relation(query, relation.attributes)
     return new_relation
