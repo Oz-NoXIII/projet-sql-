@@ -13,21 +13,21 @@ def select(relation, cmp, attrib, const, counter):
         raise ComparatorError("L'élément " + cmp + " est invalide pour cette operation. " +
                               f"Veuillez utiliser un des comparateurs suivants:{comparators}")
     if not isarginrel(attrib, relation):
-        raise AttributeError(f"{attrib} n'est pas un attribut de la relation {relation}")
+        raise AttributesError(f"{attrib} n'est pas un attribut de la relation {relation}")
 
     # counter !=1 => attribut égal constante
     # counter=1 => attribut égal attribut
     if counter == 1:
-        args = [relation.attributes[attrib][0], relation.attributes[const][0]]
         if not isarginrel(const, relation):
-            raise AttributeError(f"{const} n'est pas un attribut de la relation {relation}")
-        elif not havesametype(args):
-            raise ErrorType(f"Dans les attributs: {relation.attributes[attrib][0]} et "
-                            f"{relation.attributes[const][0]} doivent etre du même type")
+            raise AttributesError(f"{const} n'est pas un attribut de la relation {relation}")
+        args = [relation.attributes[attrib][0], relation.attributes[const][0]]
+        havesametype(args)
+
     else:
         if type(relation.attributes[attrib][0]) != type(const):
-            raise ErrorType(f"Dans les attributs: {relation.attributes[attrib][0]} et {const} doivent etre du meme type")
-    name = f"SELECT * FROM {relation.nom} WHERE {attrib}{cmp}{const}"
+            raise ErrorType(
+                f"Dans les attributs: {relation.attributes[attrib][0]} et {const} doivent etre du meme type")
+    name = f"SELECT * FROM {relation.name} WHERE {attrib}{cmp}{const}"
     new_rel = Relation(name, relation.attributes)
     return new_rel
 
@@ -39,12 +39,12 @@ def project(relation, *args):
 
     args = removeduplicate(args)
     argsinrel(relation, args)
-    name = "select "
+    name = "SELECT "
     for i in range(len(args)):
         if i != len(args) - 1:
             name += args[i] + ", "
         else:
-            name += args[i] + f" from {relation.name}"
+            name += args[i] + f" FROM {relation.name}"
     attributes = {}
     for arg in args:
         if type(relation.attributes[arg][0]) == int:
@@ -59,14 +59,15 @@ def project(relation, *args):
 
 def rename(relation, old_name, new_name):
     """Fonction qui retourne une relation dont le name est la traduction du Renomage de SPJRUD en SQL,
-     old_name est l'ancien nom d'attribut et new_name est le nouveau nom à attribuer
-     """
+    old_name est l'ancien nom d'attribut et new_name est le nouveau nom à attribuer
+    PS: modifie aussi le attributes de la relatiion entrée en paramettre!!!
+    """
 
     if not isarginrel(old_name, relation):
         raise AttributesError(f"{old_name} n'est pas un attribut de la relation {relation}")
 
-    query = f"ALTER TABLE {relation.name} RENAME COLUMN {old_name} TO {new_name}"
+    name = f"ALTER TABLE {relation.name} RENAME COLUMN {old_name} TO {new_name}"
     relation.attributes[new_name] = relation.attributes[old_name]
     del relation.attributes[old_name]
-    new_relation = Relation(query, relation.attributes)
-    return new_relation
+    new_rel = Relation(name, relation.attributes)
+    return new_rel
