@@ -1,8 +1,8 @@
 class Relation:
-    def __init__(self, nom, dico):
-        self.name = nom
-        isarelation(dico)
-        self.attributes = dico
+    def __init__(self, name, attributes):
+        self.name = name
+        isarelation(attributes)
+        self.attributes = attributes
 
 
 class AttributesError(Exception):
@@ -50,8 +50,8 @@ def removeduplicate(args):
 
 
 def isarelation(attributes):
-    """Fonction qui vérifie si toutes les attributs pointent vers des listes non-vides de même taille contenant des éléments
-    de même type et retourne True"""
+    """Fonction qui vérifie si toutes les attributs pointent vers des listes non-vides de même taille contenant
+     des éléments de même type et retourne True"""
 
     if type(attributes) != dict:
         raise ErrorType()

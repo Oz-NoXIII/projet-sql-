@@ -7,7 +7,7 @@ def join(rel1, rel2):
     (mêmes attributs et types de valeurs)"""
 
     if joinable(rel1, rel2):
-        name = f"select * from {rel1.name} natural join {rel2.name}"
+        name = f"SELECT * FROM {rel1.name} NATURAL JOIN {rel2.name}"
     else:
         raise AttributesError("Jonction impossible car aucun attribut en commun")
 
@@ -39,7 +39,7 @@ def union(rel1, rel2):
     """
 
     if havesameattributes(rel1, rel2):
-        name = f"SELECT * FROM {rel1.nom} UNION SELECT * FROM {rel2.nom}"
+        name = f"SELECT * FROM {rel1.name} UNION SELECT * FROM {rel2.name}"
     else:
         raise AttributesError(f"Union impossible car attributs de {rel1.name} différent de {rel2.name} ")
     new_rel = Relation(name, rel1.attributes)
@@ -52,7 +52,7 @@ def difference(rel1, rel2):
     """
 
     if havesameattributes(rel1, rel2):
-        name = f"select * from {rel1.name} except select * from {rel2.name}"
+        name = f"SELECT * FROM {rel1.name} EXCEPT SELECT * FROM {rel2.name}"
     else:
         raise AttributesError(f"Différence impossible car attributs de {rel1.name} différent de {rel2.name} ")
     new_rel = Relation(name, rel1.attributes)
