@@ -1,7 +1,7 @@
 import unittest
 from fct_utile import Relation
 from OperateurUnitaire import project, select, rename
-
+from SQlLiteManage import execute
 
 class OpUTest(unittest.TestCase):
     """Test case utilisé pour tester les fonctions du module OperateurUnitaire"""
@@ -13,6 +13,7 @@ class OpUTest(unittest.TestCase):
         attr = 'Nom'
         const = "'alice'"
         print(type(const))
+        # print(execute(select(rel, "=", attr, const, 0)))
         self.assertEqual(select(rel, "=", attr, const, 0).name, "SELECT * FROM Personne WHERE Nom='alice'")
 
     def test_project(self):
