@@ -1,7 +1,6 @@
 import unittest
-
 from fct_utile import Relation, argsinrel, removeduplicate, havesametype, ErrorType, arelists, len_is_cst, \
-    isarginrel, joinable, isarelation, havesameattributes
+    isarginrel, joinable, isarelation, havesameattributes, listofkey, nameandtype, linedata, data
 
 
 class FctUTest(unittest.TestCase):
@@ -11,7 +10,7 @@ class FctUTest(unittest.TestCase):
 
     """
 
-    def test_argsinrel(self):  
+    def test_argsinrel(self):
         """Teste le fonctionnement de la fonction argsinrel"""
 
         # erreur de type sur rel et args
@@ -197,6 +196,8 @@ class FctUTest(unittest.TestCase):
         self.assertTrue(joinable(rel1, rel2))
 
     def test_havesameattributes(self):
+        """Teste le fonctionnement de la fonction havesameattributes"""
+
         rel1 = "1"
         rel2 = "2"
         with self.assertRaises(ErrorType):
@@ -224,6 +225,40 @@ class FctUTest(unittest.TestCase):
         rel1 = Relation("rel1", {"a": [1], "b": [2]})
         rel2 = Relation("rel2", {"a": [1], "b": [2]})
         self.assertTrue(havesameattributes(rel1, rel2))
+
+    def test_listofkey(self):
+        """Teste le fonctionnement de la fonction listofkey"""
+
+        # résultat
+        d = {"a": 1, "b": 2, "c": 3}
+        l = listofkey(d)
+        for key in d:
+            self.assertTrue(key in l)
+
+    def test_nameandtype(self):
+        """Teste le fonctionnement de la fonction nameandtype"""
+
+        # résultat
+        d = {"a": [], "b": [1], "c": [1.0], "d": ["d"]}
+        l = ["a", "b", "c", "d"]
+        self.assertEqual(nameandtype(d, l), "a null, b integer, c real, d text")
+
+    def test_linedata(self):
+        """Teste le fonctionnement de la fonction linedata"""
+
+        # résultat
+        d = {"a": ["0", "1"], "b": [0, 1], "c": [0.0, 1.0], "d": ["a", "b"]}
+        l = ["a", "b", "c", "d"]
+        self.assertEqual(linedata(d, l, 0), ('0', 0, 0.0, 'a'))
+        self.assertEqual(linedata(d, l, 1), ('1', 1, 1.0, 'b'))
+
+    def test_data(self):
+        """Teste le fonctionnement de la fonction data"""
+
+        # résultat
+        d = {"a": ["0", "1", "2"], "b": [0, 1, 2], "c": [0.0, 1.0, 2.0], "d": ["a", "b", "c"]}
+        l = ["a", "b", "c", "d"]
+        self.assertEqual(data(d, l), [('0', 0, 0.0, 'a'), ('1', 1, 1.0, 'b'), ('2', 2, 2.0, 'c')])
 
 
 if __name__ == '__main__':

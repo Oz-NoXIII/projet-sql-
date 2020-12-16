@@ -1,3 +1,4 @@
+from SQlLiteManage import execute
 from fct_utile import removeduplicate, argsinrel, Relation, isarelation, ComparatorError, ErrorType, isarginrel, \
     havesametype, AttributesError
 
@@ -13,7 +14,7 @@ def select(relation, cmp, attrib, const, counter):
         raise ComparatorError("L'élément " + cmp + " est invalide pour cette operation. " +
                               f"Veuillez utiliser un des comparateurs suivants:{comparators}")
     if not isarginrel(attrib, relation):
-        raise AttributesError(f"{attrib} n'est pas un attribut de la relation {relation}")
+        raise AttributesError(f"{attrib} n'est pas un attribut de la relation {relation.attributes}")
 
     # counter !=1 => attribut égal constante
     # counter=1 => attribut égal attribut
@@ -29,6 +30,7 @@ def select(relation, cmp, attrib, const, counter):
                 f"Dans les attributs: {relation.attributes[attrib][0]} et {const} doivent etre du meme type")
     name = f"SELECT * FROM {relation.name} WHERE {attrib}{cmp}{const}"
     new_rel = Relation(name, relation.attributes)
+    # execute(new_rel.name)
     return new_rel
 
 
@@ -54,6 +56,7 @@ def project(relation, *args):
         else:
             attributes[arg] = []
     new_rel = Relation(name, attributes)
+    # execute(new_rel.name)
     return new_rel
 
 
@@ -70,4 +73,5 @@ def rename(relation, old_name, new_name):
     relation.attributes[new_name] = relation.attributes[old_name]
     del relation.attributes[old_name]
     new_rel = Relation(name, relation.attributes)
+    # execute(new_rel.name)
     return new_rel

@@ -10,16 +10,16 @@ class OpUTest(unittest.TestCase):
         """Teste le fonctionnement de la fonction select"""
 
         # erreur de comparateur: cmp ne fait pas partie de la liste des comparators
-        rel = Relation('Personne', {'ID': [1, 2, 3], 'Nom': ['alice', 'bob', 'gildas']})
+        rel = Relation("Personne", {'ID': [1, 2, 3], 'Nom': ["'alice'", "'bob'", "'gildas'"]})
         attr = 'Nom'
-        const = 'alice'
+        const = "'alice'"
         cmp = '*'
         with self.assertRaises(ComparatorError):
             select(rel, cmp, attr, const, 0)
 
         # erreur d'attribut: attr ne fait pas partie de rel
         cmp = '='
-        attr = 'alice'
+        attr = "'alice'"
         with self.assertRaises(AttributesError):
             select(rel, cmp, attr, const, 0)
 
@@ -34,16 +34,16 @@ class OpUTest(unittest.TestCase):
             select(rel, cmp, attr, const, 0)
 
         # résultat
-        const = 'alice'
-        self.assertEqual(select(rel, cmp, attr, const, 0).name, "SELECT * FROM Personne WHERE Nom=alice")
+        const = "'alice'"
+        self.assertEqual(select(rel, cmp, attr, const, 0).name, "SELECT * FROM Personne WHERE Nom='alice'")
         for attribute in rel.attributes:
             self.assertEqual(type(select(rel, cmp, attr, const, 0).attributes[attribute][0]),
                              type(rel.attributes[attribute][0]))
-        rel = Relation('Bénéfice', {'Prix de vente': [10, 20, 30], "Prix d'achat": [30, 20, 10]})
-        attr = 'Prix de vente'
-        const = "Prix d'achat"
+        rel = Relation('Bénéfice', {'Prixdevente': [10, 20, 30], "Prixdachat": [30, 20, 10]})
+        attr = 'Prixdevente'
+        const = "Prixdachat"
         self.assertEqual(select(rel, cmp, attr, const, 1).name, "SELECT * FROM Bénéfice "
-                                                                "WHERE Prix de vente=Prix d'achat")
+                                                                "WHERE Prixdevente=Prixdachat")
         for attribute in rel.attributes:
             self.assertEqual(type(select(rel, cmp, attr, const, 1).attributes[attribute][0]),
                              type(rel.attributes[attribute][0]))

@@ -1,3 +1,4 @@
+from SQlLiteManage import execute
 from fct_utile import joinable, AttributesError, isarginrel, Relation, havesameattributes
 
 
@@ -30,6 +31,7 @@ def join(rel1, rel2):
                 attributes[arg] = []
 
     new_rel = Relation(name, attributes)
+    # execute(new_rel.name)
     return new_rel
 
 
@@ -43,6 +45,7 @@ def union(rel1, rel2):
     else:
         raise AttributesError(f"Union impossible car attributs de {rel1.name} différent de {rel2.name} ")
     new_rel = Relation(name, rel1.attributes)
+    # execute(new_rel.name)
     return new_rel
 
 
@@ -56,4 +59,5 @@ def difference(rel1, rel2):
     else:
         raise AttributesError(f"Différence impossible car attributs de {rel1.name} différent de {rel2.name} ")
     new_rel = Relation(name, rel1.attributes)
+    # execute(new_rel.name)
     return new_rel

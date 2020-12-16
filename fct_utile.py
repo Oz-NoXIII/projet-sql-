@@ -3,6 +3,7 @@ class Relation:
         self.name = name
         isarelation(attributes)
         self.attributes = attributes
+        # create(name, attributes) TODO regler le problème d'import
 
 
 class AttributesError(Exception):
@@ -23,7 +24,12 @@ class ComparatorError(Exception):
 def argsinrel(relation, args):
     """Fonction qui vérifie si tous les arguments dans args font partie de la relation rel et retourne True.
 
-    Léve une erreur et retourne False sinon."""
+    Léve une erreur et retourne False sinon.
+
+    :param relation:
+    :param args:
+    :return: True or False
+    """
 
     if type(relation) != Relation or type(args) != list:
         raise ErrorType()
@@ -38,7 +44,11 @@ def argsinrel(relation, args):
 
 
 def removeduplicate(args):
-    """Fonction qui supprime les doublons dans un tuple et retourne une liste"""
+    """Fonction qui supprime les doublons dans un tuple et retourne une liste.
+
+    :param args:
+    :return:
+    """
 
     if type(args) != tuple:
         raise ErrorType()
@@ -51,7 +61,11 @@ def removeduplicate(args):
 
 def isarelation(attributes):
     """Fonction qui vérifie si toutes les attributs pointent vers des listes non-vides de même taille contenant
-     des éléments de même type et retourne True"""
+     des éléments de même type et retourne True.
+
+    :param attributes:
+    :return: True
+    """
 
     if type(attributes) != dict:
         raise ErrorType()
@@ -64,7 +78,11 @@ def isarelation(attributes):
 def len_is_cst(attributes):
     """Fonction qui vérifie si toutes les attributs pointent vers des listes non-vides de même taille et retourne True.
 
-    Lève une erreur et retourne False sinon."""
+    Lève une erreur et retourne False sinon.
+
+    :param attributes:
+    :return: True or False
+    """
 
     if type(attributes) != dict:
         raise ErrorType()
@@ -91,7 +109,11 @@ def len_is_cst(attributes):
 def arelists(attributes):
     """Fonction qui vérifie si toutes les clés pointent vers des listes et retourne True.
 
-    Lève une erreur et retourne False sinon."""
+    Lève une erreur et retourne False sinon.
+
+    :param attributes:
+    :return: True or False
+    """
 
     if type(attributes) != dict:
         raise ErrorType()
@@ -108,7 +130,11 @@ def arelists(attributes):
 def havesametype(args):
     """Fonction qui vérifie si toutes les éléments de la liste sont du même type et retourne True.
 
-    Lève une erreur et retourne False sinon."""
+    Lève une erreur et retourne False sinon.
+
+    :param args:
+    :return: True or False
+    """
 
     if type(args) != list:
         raise ErrorType()
@@ -132,7 +158,12 @@ def havesametype(args):
 def isarginrel(arg, rel):
     """Fonction qui retourne True si un argument arg est attribut de la relation rel.
 
-    Retourne False sinon."""
+    Retourne False sinon.
+
+    :param arg:
+    :param rel:
+    :return: True or False
+    """
 
     if type(rel) != Relation:
         raise ErrorType()
@@ -145,7 +176,12 @@ def isarginrel(arg, rel):
 def joinable(rel1, rel2):
     """Fonction qui retourne True si deux relations possèdent au moins un attribut en commun.
 
-    Retourne False sinon."""
+    Retourne False sinon.
+
+    :param rel1:
+    :param rel2:
+    :return: True or False
+    """
 
     if type(rel1) != Relation or type(rel2) != Relation:
         raise ErrorType("Prends uniquement des relations en tant que paramètre!")
@@ -156,10 +192,16 @@ def joinable(rel1, rel2):
 
 
 def havesameattributes(rel1, rel2):
-    """Fonction qui retourne True si deux relations possèdent exactement les mêmes attributs ayant des valeurs de même
+    """
+    Fonction qui retourne True si deux relations possèdent exactement les mêmes attributs ayant des valeurs de même
     type.
 
-    Retourne False sinon."""
+    Retourne False sinon.
+
+    :param rel1:
+    :param rel2:
+    :return: True or False
+    """
 
     if type(rel1) != Relation or type(rel2) != Relation:
         raise ErrorType("Prends uniquement des relations en tant que paramètre!")
@@ -175,3 +217,83 @@ def havesameattributes(rel1, rel2):
             if not havesametype(args):
                 return False
     return True
+
+
+def listofkey(dictionnaire):
+    """ Fonction qui retourne une liste des clès d'un dictionnaire
+
+    :param dictionnaire:
+    :return keys:
+    """
+    keys = []
+    for key in dictionnaire:
+        keys.append(key)
+    return keys
+
+
+def nameandtype(dictionnaire, keys):
+    """Fonction qui prends un dictionnaire de liste en paramètre
+    et retourne un str des noms des clés avec le type SQL
+    des valeur de la liste contenue dans cette clé
+
+    exemple: dict["a"]=2 retournera 'a integer'
+
+    Correspondance Type python-SQl
+
+    None           <=> null
+
+    int            <=> integer
+
+    float          <=> real
+
+    str            <=> text
+    """
+
+    s = ""
+    c = 0
+    for i in range(len(keys)):
+        if not dictionnaire[keys[i]]:
+            s += keys[i] + " null"
+            c += 1
+        elif type(dictionnaire[keys[i]][0]) == int:
+            s += keys[i] + " integer"
+            c += 1
+        elif type(dictionnaire[keys[i]][0]) == float:
+            s += keys[i] + " real"
+            c += 1
+        elif type(dictionnaire[keys[i]][0]) == str:
+            s += keys[i] + " text"
+            c += 1
+        if c != len(dictionnaire):
+            s += ", "
+
+    return s
+
+
+def linedata(dictionnaire, keys, indice):
+    """Fonction qui retourne un tuple contenant
+    les éléments du dictionnaire se trouvant à l'indice indice
+    des listes pointés par les clés keys
+
+    :param dictionnaire:
+    :param keys:
+    :param indice:
+    :return: tuple(l)
+    """
+    l = []
+    for i in range(len(keys)):
+        l.append(dictionnaire[keys[i]][indice])
+    return tuple(l)
+
+
+def data(dictionnaire, keys):
+    """Fonction qui retourne les données à insérer dans une table
+
+    :param dictionnaire:
+    :param keys:
+    :return: d
+    """
+    d = []
+    for i in range(len(dictionnaire[keys[0]])):
+        d.append(linedata(dictionnaire, keys, i))
+    return d
