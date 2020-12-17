@@ -55,7 +55,12 @@ def run(relation):
 
     request = relation.name
     result = SQlLiteManage.execute(request)
-    print(result)
+
+    # Récupérer les noms d'attributs du résultat de la requête
+    desc_cursor = list(SQlLiteManage.cursor.description)
+    columns = [i[0] for i in desc_cursor]
+
+    print(f"Le résultat de l'opération est l'ensemble d'attribut(s) {columns} de valeur(s): \n {result}")
     return result
 
 

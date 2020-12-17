@@ -28,7 +28,6 @@ class MTest(unittest.TestCase):
         for row in SQlLiteManage.execute(requete.name):
             self.assertTrue(row == a)
         print(requete.name)
-        main.display(requete.name)
         SQlLiteManage.delete(name)
 
     def test_project(self):
@@ -122,7 +121,6 @@ class MTest(unittest.TestCase):
         # rel2 = main.relation("rel2", attri2)
         # main.run( main.difference(rel1, rel2))
 
-        # main.display(main.join(rel1, rel2))
         attri1 = {"A": [1, 1, 2, 2], "B": [3, 4, 4, 3], "C": [5, 5, 5, 6]}
         rel1 = main.relation("rel1", attri1)
         attri2 = {"C": [5, 5, 5, 6], "D": [2, 2, 1, 1], "B": [3, 4, 4, 4]}
