@@ -51,10 +51,8 @@ def relations_order(relation1, relation2):
 
     # Récuperer les données de la relation1 en BD dans attributes
     attributes = {}
-    premierpassage = True
     for i in range(len(col)):
-        if premierpassage:
-            attributes[col[i]] = []
+        attributes[col[i]] = []
         for row in execute(f'SELECT {col[i]} FROM {relation1.name}'):
             attributes[col[i]].append(row[0])
 
