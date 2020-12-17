@@ -4,7 +4,7 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
 
       Langage utilisé: Python
 
-      Contributeurs: TONYA Franck
+      Contributeurs: NYATCHO TONYA Frank
                      MUJYABWAMI Arsène
                
       Choix d'implémentation: 

@@ -39,7 +39,7 @@ def argsinrel(relation, args):
                 raise AttributesError()
         return True
     except AttributesError:
-        print(f"L'argument {arg} n'appartient pas à la relation {relation.name}.")
+        print(f"L'argument {arg} n'appartient pas à la relation {relation.name} {relation.attributes}.")
         return False
 
 

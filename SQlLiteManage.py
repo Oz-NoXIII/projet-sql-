@@ -2,34 +2,54 @@ import sqlite3
 
 from fct_utile import nameandtype, listofkey, data
 
-connection = sqlite3.connect('spjrudDB.db')
+db_name = 'spjrudDB'
+connection = sqlite3.connect(db_name+'.db')
 cursor = connection.cursor()
 
 
 def execute(request):
-    """Fonction qui prend une requette SQL en parametre, l'execute et retourne le resultat de l'operation"""
+    """Fonction qui prend une requête SQL comme paramètre, l'exécute et renvoie le résultat de l'opération"""
 
+    request = check_request(request)
     cursor.execute(request)
     result = cursor.fetchall()
     connection.commit()
     return result
 
 
+def check_request(request):
+    """Fonction qui prend une requête comme paramètre et vérifie si elle n'est pas entourée de parenthèses
+        Si oui, supprime les parenthèses aux extrémités et retourne la nouvelle requête"""
+
+    length = len(request)
+    if request[0] == '(':
+        request = request[1:length]
+        length = len(request)
+    if request[length - 1] == ')':
+        request = request[0:length - 1]
+
+    return request
+
+
 def create(name, attributes):
+    """Fonction qui prend en paramètre un nom de relation et ses attributs,
+        crée la relation et insére ses données en BD"""
+
     nbcolonne = '(' + '?,' * (len(attributes) - 1) + '?)'
     keys = listofkey(attributes)
     namesAttributesAndType = nameandtype(attributes, keys)
     donnees = data(attributes, keys)
 
+    # Verifie si la relation est déjà existante en BD et la supprimer si oui
+    cursor.execute(f"DROP TABLE IF EXISTS {name}")
+
     # crée la table
     cursor.execute(f'''CREATE TABLE {name}
     ({namesAttributesAndType})''')
-    # print(f'''CREATE TABLE {name} ({namesAttributesAndType})''')
 
     # insert les données
     cursor.executemany(f"INSERT INTO {name}"
                        f" VALUES {nbcolonne}", donnees)
-    # print(f"INSERT INTO {name}" f" VALUES {nbcolonne}", donnees)
 
     # Sauvegarde les changements
     connection.commit()
@@ -74,3 +94,5 @@ def relations_order(relation1, relation2):
 
 def close():
     connection.close()
+
+

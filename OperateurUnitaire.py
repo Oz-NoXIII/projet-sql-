@@ -2,7 +2,7 @@ from fct_utile import removeduplicate, argsinrel, Relation, isarelation, Compara
     havesametype, AttributesError
 
 
-def select(relation, cmp, attrib, const, counter):
+def select(relation, cmp, attrib, const, counter=0):
     """Fonction qui retourne une relation dont le name est la traduction de la selection en SPJRUD en SQL
     et le attributes est le attributes de la relation en paramètre
     """
@@ -13,21 +13,21 @@ def select(relation, cmp, attrib, const, counter):
         raise ComparatorError("L'élément " + cmp + " est invalide pour cette operation. " +
                               f"Veuillez utiliser un des comparateurs suivants:{comparators}")
     if not isarginrel(attrib, relation):
-        raise AttributesError(f"{attrib} n'est pas un attribut de la relation {relation.attributes}")
+        raise AttributesError(f"{attrib} n'est pas un attribut de la relation {relation.name} {relation.attributes}")
 
     # counter !=1 => attribut égal constante
     # counter=1 => attribut égal attribut
     if counter == 1:
         if not isarginrel(const, relation):
-            raise AttributesError(f"{const} n'est pas un attribut de la relation {relation}")
+            raise AttributesError(f"{const} n'est pas un attribut de la relation {relation.name} {relation.attributes}")
         args = [relation.attributes[attrib][0], relation.attributes[const][0]]
         havesametype(args)
 
     else:
         if type(relation.attributes[attrib][0]) != type(const):
             raise ErrorType(
-                f"Dans les attributs: {relation.attributes[attrib][0]} et {const} doivent etre du meme type")
-    name = f"SELECT * FROM {relation.name} WHERE {attrib}{cmp}{const}"
+                f"Les attributs: {attrib} et {const} doivent être du même type")
+    name = f"(SELECT * FROM {relation.name} WHERE {attrib}{cmp}{const})"
     new_rel = Relation(name, relation.attributes)
     return new_rel
 
@@ -39,12 +39,12 @@ def project(relation, *args):
 
     args = removeduplicate(args)
     argsinrel(relation, args)
-    name = "SELECT "
+    name = "(SELECT "
     for i in range(len(args)):
         if i != len(args) - 1:
             name += args[i] + ", "
         else:
-            name += args[i] + f" FROM {relation.name}"
+            name += args[i] + f" FROM {relation.name})"
     attributes = {}
     for arg in args:
         if type(relation.attributes[arg][0]) == int:
@@ -66,9 +66,9 @@ def rename(relation, old_name, new_name):
     """
 
     if not isarginrel(old_name, relation):
-        raise AttributesError(f"{old_name} n'est pas un attribut de la relation {relation}")
+        raise AttributesError(f"{old_name} n'est pas un attribut de la relation {relation.name} {relation.attributes}")
 
-    name = f"ALTER TABLE {relation.name} RENAME COLUMN {old_name} TO {new_name}"
+    name = f"(ALTER TABLE {relation.name} RENAME COLUMN {old_name} TO {new_name})"
     relation.attributes[new_name] = relation.attributes[old_name]
     del relation.attributes[old_name]
     new_rel = Relation(name, relation.attributes)
