@@ -49,10 +49,18 @@ def relations_order(relation1, relation2):
     result = list(cursor.description)
     col = [i[0] for i in result]
 
-    nbcolonne = '(' + '?,' * (len(relation1.attributes) - 1) + '?)'
-    namesAttributesAndType = nameandtype(relation1.attributes, col)
-    # TODO récuperer les données depuis la table
-    donnees = data(relation1.attributes, col)
+    # Récuperer les données de la relation1 en BD dans attributes
+    attributes = {}
+    premierpassage = True
+    for i in range(len(col)):
+        if premierpassage:
+            attributes[col[i]] = []
+        for row in execute(f'SELECT {col[i]} FROM {relation1.name}'):
+            attributes[col[i]].append(row[0])
+
+    nbcolonne = '(' + '?,' * (len(attributes) - 1) + '?)'
+    namesAttributesAndType = nameandtype(attributes, col)
+    donnees = data(attributes, col)
 
     # Verifie si la relation1 est déjà existante en BD et la supprimer si oui
     execute(f"DROP TABLE IF EXISTS {relation1.name}")
