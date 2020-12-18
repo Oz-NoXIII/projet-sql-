@@ -21,9 +21,10 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
                                                                         3.Le comparateur qui doit faire partie de la liste
                                                                         prédéfini de symboles: '=', '<', '>', '<=', '>=' ou '!='
                                                                         
-                                                                        4.La valeur à comparer qui peut être un attribut de la relation ou une constante
-                                                                        si c'est une constante, cette valeur doit être du même type que ceux des valeurs de l'attribut 
-                                                                        si c'est un attribut, elle doit être un attribute de la relation (clé du dictionnaire);
+                                                                        4.La valeur à comparer qui peut être un attribut de la relation 
+                                                                        ou une constante si c'est une constante, cette valeur doit être 
+                                                                        du même type que ceux des valeurs de l'attribut si c'est un attribut, 
+                                                                        elle doit être un attribute de la relation (clé du dictionnaire);
                                                                         
                                                                         5.Le compteur qui indique si la valeur à comparer est un
                                                                         attribut (clé du dictionnaire) de la relation ou une constante.
@@ -38,8 +39,8 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
               
                           
                         e)Le renommage est une fonction à 3 paramètres: 1.La relation dans laquelle l'action aura lieu;
-                                                                         2.L'ancien nom de l'attribut;
-                                                                         3.Le nouveau nom de l'attribut;
+                                                                        2.L'ancien nom de l'attribut;
+                                                                        3.Le nouveau nom de l'attribut;
                                                                         
                         f)L'union est une fonction à 2 paramètres: deux relations de mêmes attributs.
                           (supprime les doublons)
@@ -47,7 +48,8 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
                         g)La différence sera une fonction à 2 paramètres: deux relations de mêmes attributs.
                         
                         h)L'exécution et l'affichage du resultat d'un requête peut se faire de deux manières:
-                         - Soit en créant d'abord une nouvelle table à partir du resultat d'une requête avec la fonction SPJRUDtoSQL.create() et ensuite afficher le resultat avec la fonction SPJRUDtoSQL.display().
+                         - Soit en créant d'abord une nouvelle table à partir du resultat d'une requête avec la fonction SPJRUDtoSQL.create() 
+                         et ensuite afficher le resultat avec la fonction SPJRUDtoSQL.display().
                          - Soit en affichant directement le resultat de la requête sans créer la table en BD avec la fonction SPJRUDtoSQL.create().
                         
                         i)La création d'une table peut se faire par l'intermediaire d'un nom et d'un dictionnaire 
@@ -90,6 +92,7 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
       attributes = {"a": ["0", "1", "2"], "b": [0, 1, 2], "c": [0.0, 1.0, 2.0], "d": ["a", "b", "c"]} # Attributs de la relation
       rel = SPJRUDtoSQL.relation(name, attributes) # Création de la relation
       requete = SPJRUDtoSQL.select(rel, "=", "d", "b", 0) # Operation de selection retournant la requette SQL
+      SPJRUDtoSQL.run(requete) # affiche la table attendue
       SPJRUDtoSQL.create("selection", requete) # Création d'une nouvelle table a partir du resultat de la requette
       SPJRUDtoSQL.display("selection") # Affichage du resultat de l'opération à l'ecran
       
@@ -100,6 +103,7 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
           attributes = {"a": ["0", "1", "2"], "b": [0, 1, 2], "c": [0.0, 1.0, 2.0], "d": ["a", "b", "c"]} # Attributs de la relation
           rel = SPJRUDtoSQL.relation(name, attributes) # Création de la relation
           requete = SPJRUDtoSQL.project(rel, "d", "b", "a") # Operation de projection retournant la requette SQL
+          SPJRUDtoSQL.run(requete) # affiche la table attendue
           SPJRUDtoSQL.create("projection", requete) # Création d'une nouvelle table a partir du resultat de la requette
           SPJRUDtoSQL.display("projection") # Affichage du resultat de l'opération à l'ecran
       
@@ -110,11 +114,12 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
           attributes = {"a": ["0", "1", "2"], "b": [0, 1, 2], "c": [0.0, 1.0, 2.0], "d": ["a", "b", "c"]} # Attributs de la relation
           rel = SPJRUDtoSQL.relation(name, attributes) # Création de la relation
           requete = SPJRUDtoSQL.project(rel, "d", "b", "a") # Operation de projection retournant la requette SQL
+          SPJRUDtoSQL.run(requete) # affiche la table attendue
           SPJRUDtoSQL.create("renommage", requete) # Création d'une nouvelle table a partir du resultat de la requette
           SPJRUDtoSQL.display("renommage") # Affichage du resultat de l'opération à l'ecran
           
           
-      3) Jointure
+      4) Jointure
         
           attri1 = {"A": [1, 1, 2, 2], "B": [3, 4, 4, 3], "C": [5, 5, 5, 6]}
           rel1 = SPJRUDtoSQL.relation("rel1", attri1)
@@ -122,30 +127,33 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
           rel2 = SPJRUDtoSQL.relation("rel2", attri2)
           
           requete = SPJRUDtoSQL.join(rel1, rel2) # Operation de Jointure retournant la requette SQL
+          SPJRUDtoSQL.run(requete) # affiche la table attendue
           SPJRUDtoSQL.create("jointure", requete) # Création d'une nouvelle table a partir du resultat de la requette
           SPJRUDtoSQL.display("jointure") # Affichage du resultat de l'opération à l'ecran
         
       
-      3) Union
+      5) Union
         
          attri1 = {"A": [1, 1], "B": [3, 4], "C": [5, 5]}
          rel1 = SPJRUDtoSQL.relation("rel1", attri1)
          attri2 = {"A": [1, 2], "C": [5, 6], "B": [4, 3]}
          rel2 = SPJRUDtoSQL.relation("rel2", attri2)
          
-         requete = SPJRUDtoSQL.union(rel1, rel2)
-         SPJRUDtoSQL.create("union", requete)
-         SPJRUDtoSQL.display("union")
+         requete = SPJRUDtoSQL.union(rel1, rel2) # Operation d'union retournant la requette SQL
+         SPJRUDtoSQL.run(requete) # affiche la table attendue
+         SPJRUDtoSQL.create("union", requete) # Création d'une nouvelle table a partir du resultat de la requette
+         SPJRUDtoSQL.display("union") # Affichage du resultat de l'opération à l'ecran
          
          
-      4) Difference
+      6) Difference
         
          attri1 = {"A": [1, 1], "B": [3, 4], "C": [5, 5]}
          rel1 = SPJRUDtoSQL.relation("rel1", attri1)
          attri2 = {"A": [1, 2], "C": [5, 6], "B": [4, 3]}
          rel2 = SPJRUDtoSQL.relation("rel2", attri2)
          
-         requete = SPJRUDtoSQL.difference(rel1, rel2)
-         SPJRUDtoSQL.create("difference", requete)
-         SPJRUDtoSQL.display("difference")
+         requete = SPJRUDtoSQL.difference(rel1, rel2) # Operation de différence retournant la requette SQL
+         SPJRUDtoSQL.run(requete) # affiche la table attendue
+         SPJRUDtoSQL.create("difference", requete) # Création d'une nouvelle table a partir du resultat de la requette
+         SPJRUDtoSQL.display("difference") # Affichage du resultat de l'opération à l'ecran
           
