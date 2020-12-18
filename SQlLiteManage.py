@@ -34,6 +34,9 @@ def create(name, attributes):
     namesAttributesAndType = nameandtype(attributes, keys)
     donnees = data(attributes, keys)
 
+    # Verifie si la relation est déjà existante en BD et la supprimer si oui
+    cursor.execute(f"DROP TABLE IF EXISTS {name}")
+
     # crée la table
     cursor.execute(f'''CREATE TABLE {name}
     ({namesAttributesAndType})''')

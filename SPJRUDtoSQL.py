@@ -105,7 +105,7 @@ def display(name):
 
     # Récuperer les données de la relation1 en BD dans attributes
     attributes = {}
-    s = name + "    "
+    s = "Le résultat de l'opération est la table" +name + "    "
     for i in range(len(col)):
         attributes[col[i]] = []
         for row in SQlLiteManage.execute(f'SELECT {col[i]} FROM {name}'):
@@ -133,6 +133,9 @@ def create(name, rel):
     keys = fct_utile.listofkey(rel.attributes)
     namesAttributesAndType = fct_utile.nameandtype(rel.attributes, keys)
     donnees = SQlLiteManage.run(rel)
+
+    # Verifie si la relation est déjà existante en BD et la supprimer si oui
+    SQlLiteManage.execute(f"DROP TABLE IF EXISTS {name}")
 
     # crée la table
     SQlLiteManage.cursor.execute(f'''CREATE TABLE {name}
