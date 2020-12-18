@@ -4,7 +4,7 @@ from fct_utile import Relation, AttributesError
 
 
 class OpBTest(unittest.TestCase):
-    """Test case utilisé pour tester les fonctions du module OperateurUnitaire"""
+    """Test case utilisé pour tester les fonctions du module OperateurBinaire"""
 
     def test_join(self):
         """Teste le fonctionnement de la fonction join"""
@@ -19,7 +19,7 @@ class OpBTest(unittest.TestCase):
         rel1 = Relation("rel1", {"a": [1], "b": [2]})
         rel2 = Relation("rel2", {"b": [1], "c": [2]})
         self.assertEqual(type(join(rel1, rel2)), Relation)
-        self.assertEqual(join(rel1, rel2).name, "SELECT * FROM rel1 NATURAL JOIN rel2")
+        self.assertEqual(join(rel1, rel2).name, "(SELECT * FROM rel1 NATURAL JOIN rel2)")
         for attribute in ["a", "b", "c"]:
             if attribute == "a":
                 self.assertEqual(type(join(rel1, rel2).attributes[attribute][0]), type(rel1.attributes[attribute][0]))
@@ -40,7 +40,7 @@ class OpBTest(unittest.TestCase):
         rel1 = Relation("rel1", {"a": [1], "b": [2]})
         rel2 = Relation("rel2", {"a": [1], "b": [2]})
         self.assertEqual(type(union(rel1, rel2)), Relation)
-        self.assertEqual(union(rel1, rel2).name, "SELECT * FROM rel1 UNION SELECT * FROM rel2")
+        self.assertEqual(union(rel1, rel2).name, "(SELECT * FROM rel1 UNION SELECT * FROM rel2)")
         for attribute in ["a", "b"]:
             self.assertEqual(type(union(rel1, rel2).attributes[attribute][0]), type(rel1.attributes[attribute][0]))
 
@@ -57,7 +57,7 @@ class OpBTest(unittest.TestCase):
         rel1 = Relation("rel1", {"a": [1], "b": [2]})
         rel2 = Relation("rel2", {"a": [1], "b": [2]})
         self.assertEqual(type(difference(rel1, rel2)), Relation)
-        self.assertEqual(difference(rel1, rel2).name, "SELECT * FROM rel1 EXCEPT SELECT * FROM rel2")
+        self.assertEqual(difference(rel1, rel2).name, "(SELECT * FROM rel1 EXCEPT SELECT * FROM rel2)")
         for attribute in ["a", "b"]:
             self.assertEqual(type(difference(rel1, rel2).attributes[attribute][0]), type(rel1.attributes[attribute][0]))
 

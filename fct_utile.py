@@ -1,9 +1,10 @@
 class Relation:
+    """Classe représentant une relation spjrud selon notre interprétation"""
+
     def __init__(self, name, attributes):
         self.name = name
         isarelation(attributes)
         self.attributes = attributes
-        # create(name, attributes) TODO regler le problème d'import
 
 
 class AttributesError(Exception):
@@ -39,7 +40,7 @@ def argsinrel(relation, args):
                 raise AttributesError()
         return True
     except AttributesError:
-        print(f"L'argument {arg} n'appartient pas à la relation {relation.name} {relation.attributes}.")
+        print(f"L'argument {arg} n'appartient pas à la relation {relation.name}.")
         return False
 
 
@@ -47,7 +48,7 @@ def removeduplicate(args):
     """Fonction qui supprime les doublons dans un tuple et retourne une liste.
 
     :param args:
-    :return:
+    :return: new_args
     """
 
     if type(args) != tuple:
@@ -71,6 +72,8 @@ def isarelation(attributes):
         raise ErrorType()
     len_is_cst(attributes)
     for attribute in attributes:
+        if type(attribute) != str:
+            raise ErrorType()
         havesametype(attributes[attribute])
     return True
 
@@ -247,6 +250,10 @@ def nameandtype(dictionnaire, keys):
     float          <=> real
 
     str            <=> text
+
+    :param dictionnaire:
+    :param keys:
+    :return: s
     """
 
     s = ""
@@ -297,3 +304,21 @@ def data(dictionnaire, keys):
     for i in range(len(dictionnaire[keys[0]])):
         d.append(linedata(dictionnaire, keys, i))
     return d
+
+
+def check_request(request):
+    """Fonction qui prend une requête comme paramètre et vérifie si elle n'est pas entourée de parenthèses
+    Si oui, supprime les parenthèses aux extrémités et retourne la nouvelle requête
+
+    :param request:
+    :return: request
+    """
+
+    length = len(request)
+    if request[0] == '(':
+        request = request[1:length]
+        length = len(request)
+    if request[length - 1] == ')':
+        request = request[0:length - 1]
+
+    return request

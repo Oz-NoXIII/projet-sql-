@@ -71,7 +71,12 @@ class FctUTest(unittest.TestCase):
         # erreur de type sur attributes
         attributes = "a"
         with self.assertRaises(ErrorType):
-            arelists(attributes)
+            isarelation(attributes)
+
+        # erreur de type dans attributes
+        attributes = {1: ["a"], "b": ["b"]}
+        with self.assertRaises(ErrorType):
+            isarelation(attributes)
 
         # résultat
         attributes = {"a": ["a"], "b": ["b"]}
@@ -169,7 +174,7 @@ class FctUTest(unittest.TestCase):
         self.assertFalse(isarginrel(arg, rel))
 
         # arg est une valeur dans un attribut de rel
-        rel = Relation("rel", {1: ["a", "b"]})
+        rel = Relation("rel", {"c": ["a", "b"]})
         self.assertFalse(isarginrel(arg, rel))
 
         # résultat

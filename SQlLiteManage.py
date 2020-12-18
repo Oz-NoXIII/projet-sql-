@@ -1,68 +1,72 @@
 import sqlite3
 
+import fct_utile
 from fct_utile import nameandtype, listofkey, data
 
-db_name = 'spjrudDB'
-connection = sqlite3.connect(db_name+'.db')
+connection = sqlite3.connect('spjrudDB.db')
 cursor = connection.cursor()
 
 
 def execute(request):
-    """Fonction qui prend une requête SQL comme paramètre, l'exécute et renvoie le résultat de l'opération"""
+    """Fonction qui prend une requette SQL en parametre, l'execute et retourne le resultat de l'operation
 
-    request = check_request(request)
+    :param request:
+    :return: result
+    """
+
+    request = fct_utile.check_request(request)
     cursor.execute(request)
     result = cursor.fetchall()
     connection.commit()
     return result
 
 
-def check_request(request):
-    """Fonction qui prend une requête comme paramètre et vérifie si elle n'est pas entourée de parenthèses
-        Si oui, supprime les parenthèses aux extrémités et retourne la nouvelle requête"""
-
-    length = len(request)
-    if request[0] == '(':
-        request = request[1:length]
-        length = len(request)
-    if request[length - 1] == ')':
-        request = request[0:length - 1]
-
-    return request
-
-
 def create(name, attributes):
-    """Fonction qui prend en paramètre un nom de relation et ses attributs,
-        crée la relation et insére ses données en BD"""
+    """Fonction qui crée une relation dans une base de données
 
+    :param name:
+    :param attributes:
+    :return: relation
+    """
+    relation = fct_utile.Relation(name, attributes)
     nbcolonne = '(' + '?,' * (len(attributes) - 1) + '?)'
     keys = listofkey(attributes)
     namesAttributesAndType = nameandtype(attributes, keys)
     donnees = data(attributes, keys)
 
-    # Verifie si la relation est déjà existante en BD et la supprimer si oui
-    cursor.execute(f"DROP TABLE IF EXISTS {name}")
-
     # crée la table
     cursor.execute(f'''CREATE TABLE {name}
     ({namesAttributesAndType})''')
+    # print(f'''CREATE TABLE {name} ({namesAttributesAndType})''')
 
     # insert les données
     cursor.executemany(f"INSERT INTO {name}"
                        f" VALUES {nbcolonne}", donnees)
+    # print(f"INSERT INTO {name}" f" VALUES {nbcolonne}", donnees)
 
     # Sauvegarde les changements
     connection.commit()
 
+    return relation
+
 
 def delete(name):
+    """Fonction qui supprime une relation d'une base de données
+
+    :param name:
+    """
     cursor.execute(f"DROP TABLE {name}")
     connection.commit()
 
 
 def relations_order(relation1, relation2):
-    """Fonction qui prend deux Relations en paramètre, récupére les colonnes de la relation2 en BD et crée la relation1 par rapport à l'ordre
-    des colonnes de la relation2 récupérés en BD"""
+    """Fonction qui prend deux Relations en paramètre, récupére les colonnes de la relation2
+    en BD et crée la relation1 par rapport à l'ordre des colonnes de la relation2 récupérés en BD
+
+    :param relation1:
+    :param relation2:
+    :return:
+    """
 
     # Récupérer les colonnes de la relation2 en BD
     execute(f"SELECT * FROM {relation2.name}")
@@ -92,7 +96,19 @@ def relations_order(relation1, relation2):
     connection.commit()
 
 
+def run(rel):
+    """Fonction qui prend en paramètre une requête simple ou imbriquée et l'exécute
+
+    :param rel:
+    :return: result
+    """
+
+    request = rel.name
+    result = execute(request)
+    return result
+
+
 def close():
+    """Fonction qui ferme la connection à la base de données"""
+
     connection.close()
-
-

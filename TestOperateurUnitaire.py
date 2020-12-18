@@ -10,16 +10,16 @@ class OpUTest(unittest.TestCase):
         """Teste le fonctionnement de la fonction select"""
 
         # erreur de comparateur: cmp ne fait pas partie de la liste des comparators
-        rel = Relation("Personne", {'ID': [1, 2, 3], 'Nom': ["'alice'", "'bob'", "'gildas'"]})
+        rel = Relation("Personne", {'ID': [1, 2, 3], 'Nom': ["alice", "bob", "gildas"]})
         attr = 'Nom'
-        const = "'alice'"
+        const = "alice"
         cmp = '*'
         with self.assertRaises(ComparatorError):
             select(rel, cmp, attr, const, 0)
 
         # erreur d'attribut: attr ne fait pas partie de rel
         cmp = '='
-        attr = "'alice'"
+        attr = "alice"
         with self.assertRaises(AttributesError):
             select(rel, cmp, attr, const, 0)
 
@@ -34,16 +34,16 @@ class OpUTest(unittest.TestCase):
             select(rel, cmp, attr, const, 0)
 
         # résultat
-        const = "'alice'"
-        self.assertEqual(select(rel, cmp, attr, const, 0).name, "SELECT * FROM Personne WHERE Nom='alice'")
+        const = "alice"
+        self.assertEqual(select(rel, cmp, attr, const, 0).name, "(SELECT * FROM Personne WHERE Nom=alice)")
         for attribute in rel.attributes:
             self.assertEqual(type(select(rel, cmp, attr, const, 0).attributes[attribute][0]),
                              type(rel.attributes[attribute][0]))
         rel = Relation('Bénéfice', {'Prixdevente': [10, 20, 30], "Prixdachat": [30, 20, 10]})
         attr = 'Prixdevente'
         const = "Prixdachat"
-        self.assertEqual(select(rel, cmp, attr, const, 1).name, "SELECT * FROM Bénéfice "
-                                                                "WHERE Prixdevente=Prixdachat")
+        self.assertEqual(select(rel, cmp, attr, const, 1).name, "(SELECT * FROM Bénéfice "
+                                                                "WHERE Prixdevente=Prixdachat)")
         for attribute in rel.attributes:
             self.assertEqual(type(select(rel, cmp, attr, const, 1).attributes[attribute][0]),
                              type(rel.attributes[attribute][0]))
@@ -54,7 +54,7 @@ class OpUTest(unittest.TestCase):
         # résultat
         rel = Relation("rel", {'a': [1], 'b': [2]})
         self.assertEqual(type(project(rel, 'a', 'b', 'b')), Relation)
-        self.assertEqual(project(rel, 'a', 'b', 'b').name, "SELECT a, b FROM rel")
+        self.assertEqual(project(rel, 'a', 'b', 'b').name, "(SELECT a, b FROM rel)")
         for attribute in ["a", "b"]:
             self.assertEqual(type(project(rel, 'a', 'b', 'b').attributes[attribute][0]),
                              type(rel.attributes[attribute][0]))
@@ -71,9 +71,10 @@ class OpUTest(unittest.TestCase):
 
         # résultat
         old_name = 'Nom'
-        self.assertEqual(rename(rel, old_name, new_name).name, "ALTER TABLE Personne RENAME COLUMN Nom TO Login")
-        self.assertFalse(old_name in rel.attributes)
-        self.assertTrue(new_name in rel.attributes)
+        ren = rename(rel, old_name, new_name)
+        self.assertEqual(ren.name, "(ALTER TABLE Personne RENAME COLUMN Nom TO Login)")
+        self.assertFalse(old_name in ren.attributes)
+        self.assertTrue(new_name in ren.attributes)
 
 
 if __name__ == '__main__':
