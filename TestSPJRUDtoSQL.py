@@ -20,17 +20,18 @@ class STSTest(unittest.TestCase):
         a = [('0', 0, 0.0, 'a'), ('1', 1, 1.0, 'b'), ('2', 2, 2.0, 'c')]
         result = SQlLiteManage.execute('SELECT * FROM test')
         self.assertTrue(result == a)
-        SQlLiteManage.delete(name)
 
-    def test_select(self):
+    def test_selectcst(self):
         """Teste le fonctionnement de la fonction select"""
 
-        print(attributes)
         rel = SPJRUDtoSQL.relation(name, attributes)
         a = [('1', 1, 1.0, 'b')]
-        requete = SPJRUDtoSQL.select(rel, "=", "b", 1, 0)
+        requete = SPJRUDtoSQL.select(rel, "=", "d", "b", 0)
         result = SQlLiteManage.run(requete)
         self.assertTrue(result == a)
+
+        # teste run
+        SPJRUDtoSQL.run(requete)
 
         # teste create et display
         SPJRUDtoSQL.create("selection", requete)
@@ -40,6 +41,18 @@ class STSTest(unittest.TestCase):
         SQlLiteManage.delete(name)
         SQlLiteManage.delete("selection")
 
+    def test_selectattrib(self):
+        """Teste le fonctionnement de la fonction select"""
+
+        attrib = {"A": ["z", "b", "y"], "B": [0, 1, 2],
+                  "C": [0.0, 1.0, 2.0], "D": ["a", "b", "c"]}
+        rel = SPJRUDtoSQL.relation(name, attrib)
+        a = [('b', 1, 1.0, 'b')]
+        requete = SPJRUDtoSQL.select(rel, "=", "A", "D", 1)
+        result = SQlLiteManage.run(requete)
+        self.assertTrue(result == a)
+        SQlLiteManage.delete(name)
+
     def test_project(self):
         """Teste le fonctionnement de la fonction project"""
 
@@ -48,6 +61,9 @@ class STSTest(unittest.TestCase):
         requete = SPJRUDtoSQL.project(rel, "d", "b", "a")
         result = SQlLiteManage.run(requete)
         self.assertTrue(result == a)
+
+        # teste run
+        SPJRUDtoSQL.run(requete)
 
         # teste create et display
         SPJRUDtoSQL.create("projection", requete)
@@ -61,17 +77,21 @@ class STSTest(unittest.TestCase):
         """Teste le fonctionnement de la fonction rename"""
 
         rel = SPJRUDtoSQL.relation(name, attributes)
-        a = [('0',), ('1',), ('2',)]
+        a = [('0', 0, 0.0, 'a'), ('1', 1, 1.0, 'b'), ('2', 2, 2.0, 'c')]
         requete = SPJRUDtoSQL.rename(rel, "a", "z")
-        print(requete.attributes)
-        result = SQlLiteManage.execute(f'SELECT z FROM {name}')
+        result = SQlLiteManage.run(requete)
         self.assertTrue(result == a)
 
-        # teste display (create indisponible pour cette fonction)
-        SPJRUDtoSQL.display(name)
+        # teste run
+        SPJRUDtoSQL.run(requete)
+
+        # teste create et display
+        SPJRUDtoSQL.create("renommage", requete)
+        SPJRUDtoSQL.display("renommage")
 
         # suppression des tables
         SQlLiteManage.delete(name)
+        SQlLiteManage.delete("renommage")
 
     def test_join(self):
         """Teste le fonctionnement de la fonction join"""
@@ -84,6 +104,9 @@ class STSTest(unittest.TestCase):
         requete = SPJRUDtoSQL.join(rel1, rel2)
         result = SQlLiteManage.run(requete)
         self.assertTrue(result == a)
+
+        # teste run
+        SPJRUDtoSQL.run(requete)
 
         # teste create et display
         SPJRUDtoSQL.create("jointure", requete)
@@ -106,6 +129,9 @@ class STSTest(unittest.TestCase):
         result = SQlLiteManage.run(requete)
         self.assertTrue(result == a)
 
+        # teste run
+        SPJRUDtoSQL.run(requete)
+
         # teste create et display
         SPJRUDtoSQL.create("uni", requete)
         SPJRUDtoSQL.display("uni")
@@ -126,6 +152,9 @@ class STSTest(unittest.TestCase):
         requete = SPJRUDtoSQL.difference(rel1, rel2)
         result = SQlLiteManage.run(requete)
         self.assertTrue(result == a)
+
+        # teste run
+        SPJRUDtoSQL.run(requete)
 
         # teste create et display
         SPJRUDtoSQL.create("difference", requete)

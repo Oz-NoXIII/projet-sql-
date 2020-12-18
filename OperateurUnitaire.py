@@ -39,7 +39,10 @@ def select(relation, cmp, attrib, const, counter):
         if type(relation.attributes[attrib][0]) != type(const):
             raise ErrorType(
                 f"Dans les attributs: {relation.attributes[attrib][0]} et {const} doivent etre du meme type")
-    name = f"(SELECT * FROM {relation.name} WHERE {attrib}{cmp}{const})"
+    if counter != 1 and type(const) == str:
+        name = f"(SELECT * FROM {relation.name} WHERE {attrib}{cmp}'{const}')"
+    else:
+        name = f"(SELECT * FROM {relation.name} WHERE {attrib}{cmp}{const})"
     new_rel = Relation(name, relation.attributes)
     return new_rel
 
@@ -89,8 +92,13 @@ def rename(relation, old_name, new_name):
 
     if not isarginrel(old_name, relation):
         raise AttributesError(f"{old_name} n'est pas un attribut de la relation {relation}")
-
-    name = f"(ALTER TABLE {relation.name} RENAME COLUMN {old_name} TO {new_name})"
+    s = ", "
+    l = list(relation.attributes.keys())
+    l.remove(old_name)
+    for i in range(len(l)-1):
+        s += l[i] + ", "
+    s += l[-1]
+    name = f"(SELECT {old_name} AS {new_name}{s}  FROM {relation.name})"
     attributes = copy.deepcopy(relation.attributes)
     attributes[new_name] = attributes[old_name]
     del attributes[old_name]

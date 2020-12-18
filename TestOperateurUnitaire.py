@@ -35,7 +35,7 @@ class OpUTest(unittest.TestCase):
 
         # résultat
         const = "alice"
-        self.assertEqual(select(rel, cmp, attr, const, 0).name, "(SELECT * FROM Personne WHERE Nom=alice)")
+        self.assertEqual(select(rel, cmp, attr, const, 0).name, "(SELECT * FROM Personne WHERE Nom='alice')")
         for attribute in rel.attributes:
             self.assertEqual(type(select(rel, cmp, attr, const, 0).attributes[attribute][0]),
                              type(rel.attributes[attribute][0]))
@@ -72,7 +72,7 @@ class OpUTest(unittest.TestCase):
         # résultat
         old_name = 'Nom'
         ren = rename(rel, old_name, new_name)
-        self.assertEqual(ren.name, "(ALTER TABLE Personne RENAME COLUMN Nom TO Login)")
+        self.assertEqual(ren.name, "(SELECT Nom AS Login, ID  FROM Personne)")
         self.assertFalse(old_name in ren.attributes)
         self.assertTrue(new_name in ren.attributes)
 

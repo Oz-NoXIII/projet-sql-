@@ -11,6 +11,7 @@ def relation(name, attributes):
     :param attributes:
     :return: requete
     """
+
     requete = SQlLiteManage.create(name, attributes)
     return requete
 
@@ -25,6 +26,7 @@ def select(rel, cmp, attrib, const, counter):
     :param counter:
     :return: requete
     """
+
     requete = OperateurUnitaire.select(rel, cmp, attrib, const, counter)
     SQlLiteManage.run(requete)
     return requete
@@ -37,6 +39,7 @@ def project(rel, *args):
     :param args:
     :return: requete
     """
+
     requete = OperateurUnitaire.project(rel, *args)
     SQlLiteManage.run(requete)
     return requete
@@ -105,7 +108,8 @@ def display(name):
 
     # Récuperer les données de la relation1 en BD dans attributes
     attributes = {}
-    s = "Le résultat de l'opération est la table" +name + "    "
+    print("Le résultat de l'opération est la table\n")
+    s = name + "    "
     for i in range(len(col)):
         attributes[col[i]] = []
         for row in SQlLiteManage.execute(f'SELECT {col[i]} FROM {name}'):
@@ -129,23 +133,45 @@ def create(name, rel):
     :param name:
     :param rel:
     """
+
+    # Verifie si la relation est déjà existante en BD et la supprimer si oui
+    SQlLiteManage.execute(f"DROP TABLE IF EXISTS {name}")
+
     nbcolonne = '(' + '?,' * (len(rel.attributes) - 1) + '?)'
     keys = fct_utile.listofkey(rel.attributes)
     namesAttributesAndType = fct_utile.nameandtype(rel.attributes, keys)
     donnees = SQlLiteManage.run(rel)
 
-    # Verifie si la relation est déjà existante en BD et la supprimer si oui
-    SQlLiteManage.execute(f"DROP TABLE IF EXISTS {name}")
-
     # crée la table
     SQlLiteManage.cursor.execute(f'''CREATE TABLE {name}
         ({namesAttributesAndType})''')
-    # print(f'''CREATE TABLE {name} ({namesAttributesAndType})''')
 
     # insert les données
     SQlLiteManage.cursor.executemany(f"INSERT INTO {name}"
-                       f" VALUES {nbcolonne}", donnees)
-    # print(f"INSERT INTO {name}" f" VALUES {nbcolonne}", donnees)
+                                     f" VALUES {nbcolonne}", donnees)
 
     # Sauvegarde les changements
     SQlLiteManage.connection.commit()
+
+
+def run(rel):
+    """Fonction qui affiche une table à partir d'une requête
+
+    :param rel:
+    """
+
+    print("Le résultat de l'opération sera une table\n")
+    result = SQlLiteManage.run(rel)
+    s = ""
+    k = list(rel.attributes.keys())
+    for i in range(len(k)):
+        s += k[i] + " | "
+    print(s)
+    print("-" * len(s))
+    for j in range(len(result)):
+        l = ""
+        for i in range(len(k)):
+            l += str(result[j][i]) + " | "
+        print(l)
+    print("\n")
+
