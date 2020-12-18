@@ -160,7 +160,9 @@ def run(rel):
     :param rel:
     """
 
-    print("Le résultat de l'opération sera une table\n")
+    operation = fct_utile.check_request(rel.name)
+    print("Opération: " + operation)
+    print("Le résultat de l'opération sera cette table\n")
     result = SQlLiteManage.run(rel)
     s = ""
     k = list(rel.attributes.keys())
