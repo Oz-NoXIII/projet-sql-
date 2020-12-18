@@ -1,4 +1,4 @@
-# projet-sql-
+# Projet-SPJRUD-To-SQL
 
 Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
 
@@ -80,10 +80,10 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
                         découverte du projet le mois passé qui suivait justement la fin d'un autre projet d'un autre cours.
                         
                
---------------------------------------------------------------------------------------------------------------------------------------------------
-      Exemples d'utilisation des differents operateurs:
+
+  ## Exemples d'utilisation des differents operateurs:
       
-        Tout d'abors importer le module SPJRUDtoSQL
+        Tout d'abord importer le module SPJRUDtoSQL
       
       
       1) Selection:
@@ -91,10 +91,10 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
       name = "nom_relation" # Nom de la relation
       attributes = {"a": ["0", "1", "2"], "b": [0, 1, 2], "c": [0.0, 1.0, 2.0], "d": ["a", "b", "c"]} # Attributs de la relation
       rel = SPJRUDtoSQL.relation(name, attributes) # Création de la relation
-      requete = SPJRUDtoSQL.select(rel, "=", "d", "b", 0) # Operation de selection retournant la requette SQL
-      SPJRUDtoSQL.run(requete) # affiche la table attendue
-      SPJRUDtoSQL.create("selection", requete) # Création d'une nouvelle table a partir du resultat de la requette
-      SPJRUDtoSQL.display("selection") # Affichage du resultat de l'opération à l'ecran
+      requete = SPJRUDtoSQL.select(rel, "=", "d", "b", 0) # Operation de selection retournant la requête SQL
+      SPJRUDtoSQL.run(requete) # Affiche la table attendue sans la créer en BD
+      SPJRUDtoSQL.create("selection", requete) # Création d'une nouvelle table a partir du resultat de la requête
+      SPJRUDtoSQL.display("selection") # Affiche le resultat de l'opération à l'ecran
       
       
       2) Projection:
@@ -102,9 +102,9 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
           name = "nom_relation" # Nom de la relation
           attributes = {"a": ["0", "1", "2"], "b": [0, 1, 2], "c": [0.0, 1.0, 2.0], "d": ["a", "b", "c"]} # Attributs de la relation
           rel = SPJRUDtoSQL.relation(name, attributes) # Création de la relation
-          requete = SPJRUDtoSQL.project(rel, "d", "b", "a") # Operation de projection retournant la requette SQL
+          requete = SPJRUDtoSQL.project(rel, "d", "b", "a") # Operation de projection retournant la requête SQL
           SPJRUDtoSQL.run(requete) # affiche la table attendue
-          SPJRUDtoSQL.create("projection", requete) # Création d'une nouvelle table a partir du resultat de la requette
+          SPJRUDtoSQL.create("projection", requete) # Création d'une nouvelle table a partir du resultat de la requête
           SPJRUDtoSQL.display("projection") # Affichage du resultat de l'opération à l'ecran
       
       
@@ -113,9 +113,9 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
           name = "nom_relation" # Nom de la relation
           attributes = {"a": ["0", "1", "2"], "b": [0, 1, 2], "c": [0.0, 1.0, 2.0], "d": ["a", "b", "c"]} # Attributs de la relation
           rel = SPJRUDtoSQL.relation(name, attributes) # Création de la relation
-          requete = SPJRUDtoSQL.project(rel, "d", "b", "a") # Operation de projection retournant la requette SQL
-          SPJRUDtoSQL.run(requete) # affiche la table attendue
-          SPJRUDtoSQL.create("renommage", requete) # Création d'une nouvelle table a partir du resultat de la requette
+          requete = SPJRUDtoSQL.project(rel, "d", "b", "a") # Operation de projection retournant la requête SQL
+          SPJRUDtoSQL.run(requete) # Affiche la table attendue sans la créer en BD
+          SPJRUDtoSQL.create("renommage", requete) # Création d'une nouvelle table a partir du resultat de la requête
           SPJRUDtoSQL.display("renommage") # Affichage du resultat de l'opération à l'ecran
           
           
@@ -126,10 +126,10 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
           attri2 = {"C": [5, 5, 5, 6], "D": [2, 2, 1, 1], "B": [3, 4, 4, 4]}
           rel2 = SPJRUDtoSQL.relation("rel2", attri2)
           
-          requete = SPJRUDtoSQL.join(rel1, rel2) # Operation de Jointure retournant la requette SQL
-          SPJRUDtoSQL.run(requete) # affiche la table attendue
-          SPJRUDtoSQL.create("jointure", requete) # Création d'une nouvelle table a partir du resultat de la requette
-          SPJRUDtoSQL.display("jointure") # Affichage du resultat de l'opération à l'ecran
+          requete = SPJRUDtoSQL.join(rel1, rel2) # Operation de Jointure retournant la requête SQL
+          SPJRUDtoSQL.run(requete) # Affiche la table attendue sans la créer en BD
+          SPJRUDtoSQL.create("jointure", requete) # Création d'une nouvelle table a partir du resultat de la requête
+          SPJRUDtoSQL.display("jointure") # Affiche du resultat de l'opération à l'ecran
         
       
       5) Union
@@ -139,10 +139,10 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
          attri2 = {"A": [1, 2], "C": [5, 6], "B": [4, 3]}
          rel2 = SPJRUDtoSQL.relation("rel2", attri2)
          
-         requete = SPJRUDtoSQL.union(rel1, rel2) # Operation d'union retournant la requette SQL
-         SPJRUDtoSQL.run(requete) # affiche la table attendue
-         SPJRUDtoSQL.create("union", requete) # Création d'une nouvelle table a partir du resultat de la requette
-         SPJRUDtoSQL.display("union") # Affichage du resultat de l'opération à l'ecran
+         requete = SPJRUDtoSQL.union(rel1, rel2) # Operation d'union retournant la requête SQL
+         SPJRUDtoSQL.run(requete) # Affiche la table attendue sans la créer en BD
+         SPJRUDtoSQL.create("union", requete) # Création d'une nouvelle table a partir du resultat de la requête
+         SPJRUDtoSQL.display("union") # Affiche le resultat de l'opération à l'ecran
          
          
       6) Difference
@@ -152,8 +152,21 @@ Outil de compilation (traduction) de requêtes SPJRUD vers des requêtes SQL
          attri2 = {"A": [1, 2], "C": [5, 6], "B": [4, 3]}
          rel2 = SPJRUDtoSQL.relation("rel2", attri2)
          
-         requete = SPJRUDtoSQL.difference(rel1, rel2) # Operation de différence retournant la requette SQL
-         SPJRUDtoSQL.run(requete) # affiche la table attendue
-         SPJRUDtoSQL.create("difference", requete) # Création d'une nouvelle table a partir du resultat de la requette
+         requete = SPJRUDtoSQL.difference(rel1, rel2) # Operation de différence retournant la requête SQL
+         SPJRUDtoSQL.run(requete) # affiche la table attendue sans la créer en BD
+         SPJRUDtoSQL.create("difference", requete) # Création d'une nouvelle table a partir du resultat de la requête
          SPJRUDtoSQL.display("difference") # Affichage du resultat de l'opération à l'ecran
           
+          
+      7) Cas d'une requête d'opérateurs imbriqués
+        
+        attri1 = {"A": [1, 1, 2, 2], "B": [3, 4, 4, 3], "C": [5, 5, 5, 6]}
+        rel1 = SPJRUDtoSQL.relation("rel1", attri1)
+        attri2 = {"C": [5, 5, 5, 6], "D": [2, 2, 1, 1], "B": [3, 4, 4, 4]}
+        rel2 = SPJRUDtoSQL.relation("rel2", attri2)
+        a = [(1, 3, 5, 2), (1, 4, 5, 1), (1, 4, 5, 2), (2, 4, 5, 1), (2, 4, 5, 2)]
+        
+        requete = select((join(rel1, rel2)), "=", "A", 1, 0) # Operation de selection et jointure retournant la requête SQL
+        SPJRUDtoSQL.create("operation", requete) # Création d'une nouvelle table à partir du resultat de la requête
+        SPJRUDtoSQL.display("operation") # Affichage du resultat de l'opération à l'ecran
+         
